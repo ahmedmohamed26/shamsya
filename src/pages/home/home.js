@@ -8,16 +8,21 @@ import {
 	MuiPickersUtilsProvider,
 	KeyboardDatePicker,
 } from '@material-ui/pickers';
-export default function Home() {
-	// The first commit of Material-UI
-	const [selectedDateFrom, setSelectedDateFrom] = useState(new Date().toISOString().slice(0, 10));
-	const [selectedDateTo, setSelectedDateTo] = useState(new Date().toISOString().slice(0, 10));
+
+const ConverDateFormat = (date) => date.toISOString().slice(0, 10);
+
+const Home = () => {
+	const [selectedDateFrom, setSelectedDateFrom] = useState(ConverDateFormat(new Date()));
+	const [selectedDateTo, setSelectedDateTo] = useState(ConverDateFormat(new Date()));
 
 	useEffect(() => {
 		getFilterDay();
-	}, [selectedDateFrom,selectedDateTo]);
+	}, []);
 
-	function getFilterDay() {
+	const handleDateFromChange = (date) => setSelectedDateFrom(ConverDateFormat(date));
+	const handleDateToChange = (date) => setSelectedDateTo(ConverDateFormat(date));
+
+	const getFilterDay = () => {
 		axiosInstance
 			.get('/branches/1/reviews', {
 				date_from: selectedDateFrom,
@@ -25,17 +30,6 @@ export default function Home() {
 			})
 			.then((res) => console.log(res));
 	}
-
-	const handleDateFromChange = (date) => {
-		setSelectedDateFrom(new Date(date).toISOString().slice(0, 10));
-		getFilterDay();
-		console.log(selectedDateFrom)
-	};
-	const handleDateToChange = (date) => {
-		setSelectedDateTo(new Date(date).toISOString().slice(0, 10));
-		getFilterDay();
-		console.log(selectedDateTo)
-	};
 
 	return (
 		<div>
@@ -73,16 +67,16 @@ export default function Home() {
 			</MuiPickersUtilsProvider>
 			<Bar
 				data={{
-					labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+					labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
 					datasets: [
 						{
 							label: 'india',
-                            data: [12, 19, 3, 5, 2, 3],
+                            data: [12, 19, 3, 5, 2, 3,12, 19, 3, 5, 2, 3],
                             backgroundColor: 'orange',
                         },
                         {
 							label: 'َpakistan',
-                            data: [47, 52, 67, 58, 9, 50],
+                            data: [47, 52, 67, 58, 9, 50,47, 52, 67, 58, 9, 50],
                             backgroundColor: 'green',
 						},
 					],
@@ -105,3 +99,5 @@ export default function Home() {
 		</div>
 	);
 }
+
+export default Home;
