@@ -7,16 +7,12 @@ let headers = {};
 headers.Authorization = `Bearer ${TOKEN}`;
 
 
-// if (localStorage.token) {
-// 	headers.Authorization = `Bearer ${TOKEN}`;
-// }
-
-const axiosInstance = axios.create({
+const axiosInterceptors = axios.create({
 	baseURL: BASE_URL,
 	headers, 
 });
 
-axiosInstance.interceptors.response.use(
+axiosInterceptors.interceptors.response.use(
 	(response) =>
 		new Promise((resolve, reject) => {
 			resolve(response);
@@ -27,14 +23,7 @@ axiosInstance.interceptors.response.use(
 				reject(error);
 			});
 		}
-		if (error.response.status === 403) {
-			localStorage.removeItem('token');
-		} else {
-			return new Promise((resolve, reject) => {
-				reject(error);
-			});
-		}
 	}
 );
 
-export default axiosInstance;
+export default axiosInterceptors;

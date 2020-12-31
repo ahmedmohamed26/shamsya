@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axiosInstance from '../../helpers/interceptors';
+import axiosInterceptors from '../../interceptors/interceptors';
 import Radio from '@material-ui/core/Radio';
 import RadioGroup from '@material-ui/core/RadioGroup';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
@@ -17,16 +17,20 @@ const FormControlQuestion = styled(FormControl)`
 
 const Question = () => {
 	const [questions, setQuestions] = useState([]);
-	const [value, setValue] = useState({});
+	const [objValue, setValue] = useState({});
 	const handleChange = (event) =>
-		setValue({ ...value, [event.target.name]: event.target.value });
+		setValue({ ...objValue, [event.target.name]: event.target.value });
 
 	useEffect(() => {
 		getQuestions();
 	}, []);
- 
+
 	const getQuestions = () =>
-		axiosInstance.get('/questions').then((res) => setQuestions(res.data.en));
+		axiosInterceptors.get('/questions').then((res) => {
+			let questionsArr = res.data.en;
+			questionsArr = questionsArr.filter((item,index) => index === 1 || index === 3)
+			setQuestions(questionsArr)
+		});
 
 	return (
 		<Form>
@@ -36,7 +40,7 @@ const Question = () => {
 						<FormLabel component='legend'>{question.text}</FormLabel>
 						<RadioGroup
 							name={`question${question.order}`}
-							value={value || null}
+							value={objValue || null}
 							onChange={handleChange}>
 							{question.choices.map((choice, index) => (
 								<FormControlLabel
@@ -45,7 +49,7 @@ const Question = () => {
 									control={
 										<Radio
 											checked={
-												value[`question${question.order}`] === choice.text
+												objValue[`question${question.order}`] === choice.text
 											}
 											color='primary'
 										/>

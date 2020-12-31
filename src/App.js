@@ -1,19 +1,24 @@
 import './App.css';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
-import Home from './pages/home/home';
-import Question from './pages/question/question';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './shared/header/header';
 import Container from '@material-ui/core/Container';
+import React, { Suspense, lazy } from 'react';
+
+const Home = lazy(() => import('./pages/home/home'));
+const Question = lazy(() => import('./pages/question/question'));
 
 function App() {
 	return (
 		<Router>
 			<Header />
-			<Container>
-				{/* <Redirect to='/home' /> */}
-				<Route path='/home' component={Home} />
-				<Route path='/question' component={Question} />
-			</Container>
+			<Suspense fallback='loading home...'>
+				<Container>
+					<Switch>
+						<Route exact path='/' component={Home} />
+						<Route path='/question' component={Question} />
+					</Switch>
+				</Container>
+			</Suspense>
 		</Router>
 	);
 }

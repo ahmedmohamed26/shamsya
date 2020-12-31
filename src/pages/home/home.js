@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
-
-import axiosInstance from '../../helpers/interceptors';
-import { Bar } from 'react-chartjs-2';
+import BarChart from '../../components/barChart';
+import axiosInterceptors from '../../interceptors/interceptors';
 import {
 	MuiPickersUtilsProvider,
 	KeyboardDatePicker,
@@ -12,24 +11,32 @@ import {
 const ConverDateFormat = (date) => date.toISOString().slice(0, 10);
 
 const Home = () => {
-	const [selectedDateFrom, setSelectedDateFrom] = useState(ConverDateFormat(new Date()));
-	const [selectedDateTo, setSelectedDateTo] = useState(ConverDateFormat(new Date()));
+	const [selectedDateFrom, setSelectedDateFrom] = useState(
+		ConverDateFormat(new Date())
+	);
+	const [selectedDateTo, setSelectedDateTo] = useState(
+		ConverDateFormat(new Date())
+	);
 
 	useEffect(() => {
-		getFilterDay();
-	}, []);
+		const getProgress = () => {
+			axiosInterceptors
+				.get('/branches/1/progress', {
+					date_from: selectedDateFrom,
+					date_to: selectedDateTo,
+				})
+				.then((res) => console.log(res))
+				.catch((error) => {
+					throw new Error(error.message);
+				});
+		};
+		getProgress();
+	}, [selectedDateFrom, selectedDateTo]);
 
-	const handleDateFromChange = (date) => setSelectedDateFrom(ConverDateFormat(date));
-	const handleDateToChange = (date) => setSelectedDateTo(ConverDateFormat(date));
-
-	const getFilterDay = () => {
-		axiosInstance
-			.get('/branches/1/reviews', {
-				date_from: selectedDateFrom,
-				date_to: selectedDateTo,
-			})
-			.then((res) => console.log(res));
-	}
+	const handleDateFromChange = (date) =>
+		setSelectedDateFrom(ConverDateFormat(date));
+	const handleDateToChange = (date) =>
+		setSelectedDateTo(ConverDateFormat(date));
 
 	return (
 		<div>
@@ -47,7 +54,6 @@ const Home = () => {
 						KeyboardButtonProps={{
 							'aria-label': 'change date',
 						}}
-						
 					/>
 					<KeyboardDatePicker
 						disableToolbar
@@ -65,39 +71,9 @@ const Home = () => {
 					/>
 				</Grid>
 			</MuiPickersUtilsProvider>
-			<Bar
-				data={{
-					labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange','Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-					datasets: [
-						{
-							label: 'india',
-                            data: [12, 19, 3, 5, 2, 3,12, 19, 3, 5, 2, 3],
-                            backgroundColor: 'orange',
-                        },
-                        {
-							label: 'َpakistan',
-                            data: [47, 52, 67, 58, 9, 50,47, 52, 67, 58, 9, 50],
-                            backgroundColor: 'green',
-						},
-					],
-				}}
-				width={100}
-				height={100}
-				options={{
-					maintainAspectRatio: false,
-					scales: {
-						yAxes: [
-							{
-								ticks: {
-									beginAtZero: true,
-								},
-							},
-						],
-					},
-				}}
-			/>
+			<BarChart />
 		</div>
 	);
-}
+};
 
 export default Home;

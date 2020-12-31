@@ -25,7 +25,7 @@ export default function Header() {
 		<div>
 			<AppBar position='static'>
 				<Toolbar variant='dense'>
-						<LinkItem exact to='/home'>home</LinkItem>
+						<LinkItem exact to='/'>home</LinkItem>
 						<LinkItem to='/question'>question</LinkItem>
 				</Toolbar>
 			</AppBar>
