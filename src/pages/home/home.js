@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Grid from '@material-ui/core/Grid';
 import DateFnsUtils from '@date-io/date-fns';
-import BarChart from '../../components/barChart';
+import BarChart from '../../components/barChart/barChart';
 import axiosInterceptors from '../../interceptors/interceptors';
 import {
 	MuiPickersUtilsProvider,

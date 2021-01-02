@@ -1,6 +1,7 @@
 import './App.css';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import Header from './shared/header/header';
+import Loading from './components/loading/loading';
 import Container from '@material-ui/core/Container';
 import React, { Suspense, lazy } from 'react';
 
@@ -11,7 +12,8 @@ function App() {
 	return (
 		<Router>
 			<Header />
-			<Suspense fallback='loading home...'>
+
+			<Suspense fallback={<Loading />}>
 				<Container>
 					<Switch>
 						<Route exact path='/' component={Home} />
